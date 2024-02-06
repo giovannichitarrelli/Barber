@@ -54,7 +54,6 @@ const BarbershopInfo = ({ barbershop }: BarbershopInfoProps) => {
                     <p className=" text-sm">5,0 (899 avaliações)</p>
                 </div>
 
-
             </div>
         </div>
 
