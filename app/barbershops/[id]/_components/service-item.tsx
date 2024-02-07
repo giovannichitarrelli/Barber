@@ -13,6 +13,8 @@ import { generateDayTimeList } from "./_helpers/hours";
 import { format, setHours, setMinutes } from "date-fns";
 import { saveBooking } from "../_actions/save-booking";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface serviceItemProps {
     service: Service;
@@ -22,12 +24,13 @@ interface serviceItemProps {
 
 const ServiceItem = ({ service, barbershop, isAuthenticated }: serviceItemProps) => {
 
+    const router = useRouter();
     const { data } = useSession();
 
     const [date, setDate] = useState<Date | undefined>(undefined)
     const [hour, setHour] = useState<String | undefined>()
     const [submitIsLoading, setSubmitIsLoading] = useState(false);
-
+    const [sheetIsOpen, setSheetIsOpen] = useState(false);
 
     const handleDateClick = (date: Date | undefined) => {
         setDate(date);
@@ -65,6 +68,18 @@ const ServiceItem = ({ service, barbershop, isAuthenticated }: serviceItemProps)
                 userId: (data.user as any).id,
             });
 
+            setSheetIsOpen(false);
+            setHour(undefined);
+            setDate(undefined);
+            toast("Rezerva realizada com sucesso!", {
+                description: format(newDate, "'Para' dd 'de' MMMM 'ás' HH':'mm'.'", {
+                    locale: ptBR,
+                }),
+                action: {
+                    label: "Visualizar",
+                    onClick: () => router.push('/bookings'),
+                },
+            });
         } catch (error) {
             console.log(error)
         } finally {
@@ -96,7 +111,7 @@ const ServiceItem = ({ service, barbershop, isAuthenticated }: serviceItemProps)
                             </p>
 
 
-                            <Sheet>
+                            <Sheet open={sheetIsOpen} onOpenChange={setSheetIsOpen}>
                                 <SheetTrigger asChild>
                                     <Button variant="secondary" onClick={handleBookingClick}>Reservar</Button>
                                 </SheetTrigger>
