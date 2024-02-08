@@ -5,10 +5,28 @@ import Search from './_components/search';
 import BookingItem from '../_components/booking-item';
 import { db } from '../_lib/prisma';
 import BarbershopItem from './_components/barbershop-item';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../api/auth/[...nextauth]/route';
 
 export default async function Home() {
+  const session = await getServerSession(authOptions);
 
-  const barbershop = await db.barbershop.findMany({})
+  const [barbershops, confirmedBookings] = await Promise.all([
+    db.barbershop.findMany({}),
+    session?.user ? await db.booking.findMany({
+      where: {
+        userId: (session.user as any).id,
+        date: {
+          gte: new Date(),
+        },
+      },
+      include: {
+        service: true,
+        barbershop: true 
+      },
+    }) : Promise.resolve([])
+
+  ]);
 
   return (
 
@@ -25,32 +43,30 @@ export default async function Home() {
       <div className='p-5'>
         <Search />
       </div>
-      {/* 
-      <div className="px-5">
-        <h2 className='text-xs uppercase text-gray-400 font-bold mb-3'>Agendamentos</h2>
-        <BookingItem />
-      </div> */}
+
+      <div className="mt-6">
+        <h2 className='pl-5 -xs uppercase text-gray-400 font-bold mb-3'>Agendamentos</h2>
+        <div className="px-5 flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
+          {confirmedBookings.map(booking => <BookingItem key={booking.id} booking={booking} />)}
+        </div>
+      </div>
 
       <div className='mt-6'>
         <h2 className=' px-5 text-xs uppercase text-gray-400 font-bold mb-3'>Recomendados</h2>
         <div className='flex px-5 gap-4 overflow-x-auto [&::-webkit-scrollbar]:hidden'>
-          {barbershop.map((barbershop) =>
+          {barbershops.map((barbershop) =>
             <BarbershopItem key={barbershop.id} barbershop={barbershop} />
-
           )}
         </div>
-
       </div>
 
       <div className='mt-6 mb-[4.5rem]'>
-        <h2 className=' px-5 text-xs uppercase text-gray-400 font-bold mb-3'>Poupulares</h2>
+        <h2 className=' px-5 text-xs uppercase text-gray-400 font-bold mb-3 '>Poupulares</h2>
         <div className='flex px-5 gap-4 overflow-x-auto [&::-webkit-scrollbar]:hidden'>
-          {barbershop.map((barbershop) =>
+          {barbershops.map((barbershop) =>
             <BarbershopItem key={barbershop.id} barbershop={barbershop} />
-
           )}
         </div>
-
       </div>
 
 
