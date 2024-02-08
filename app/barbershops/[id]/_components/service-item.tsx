@@ -44,7 +44,6 @@ const ServiceItem = ({ service, barbershop, isAuthenticated }: serviceItemProps)
             setDayBookings(_dayBookings);
         };
 
-        
         refreshAvailableHours();
     }, [date, barbershop.id])
 
@@ -139,10 +138,10 @@ const ServiceItem = ({ service, barbershop, isAuthenticated }: serviceItemProps)
                         <h2 className="font-bold">{service.name}</h2>
                         <p className="text-sm text-gray-400">{service.description}</p>
                         <div className="flex items-center justify-between mt-3">
-                             <p className="text-primary text-sm font-bold">
+                            <p className="text-primary text-sm font-bold">
                                 {Intl.NumberFormat("pt-BR", {
-                                style: "currency",
-                                currency: "BRL",
+                                    style: "currency",
+                                    currency: "BRL",
                                 }).format(Number(service.price))}
                             </p>
 
