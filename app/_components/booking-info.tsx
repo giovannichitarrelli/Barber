@@ -15,7 +15,7 @@ const BookingInfo = ({booking}: BookingProps) => {
     
     return (
     
-        <div className="py-6 px-5 border-t border-solid border-secondary">
+      
             <Card>
                 <CardContent className="p-3 gap-3 flex flex-col">
                     <div className="flex justify-between">
@@ -57,7 +57,7 @@ const BookingInfo = ({booking}: BookingProps) => {
                     </div>
                 </CardContent>
             </Card>
-        </div>
+
 
       );
 }
