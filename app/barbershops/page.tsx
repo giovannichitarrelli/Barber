@@ -9,7 +9,6 @@ interface BarbershopDetailsPageProps{
         search?: string
     }
 }
-
 const BarbershopsPage = async ({searchParams}: BarbershopDetailsPageProps) => {
     if(!searchParams.search){
         return redirect('/');
@@ -26,9 +25,6 @@ const BarbershopsPage = async ({searchParams}: BarbershopDetailsPageProps) => {
     return (
         <>
         <Header/>
-
-       
-
         <div className="px-5 py-6 flex flex-col gap-6">
         <Search defaultValues={{
             search: searchParams.search,
@@ -44,8 +40,6 @@ const BarbershopsPage = async ({searchParams}: BarbershopDetailsPageProps) => {
             </div>
         
         </div>
-
-
         </>
     );
 }
